@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RootNamespace>TaskListFSharp</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Task.fs" />
+        <Compile Include="RealConsole.fs" />
+        <Compile Include="TaskList.fs" />
+    </ItemGroup>
+
+</Project>
