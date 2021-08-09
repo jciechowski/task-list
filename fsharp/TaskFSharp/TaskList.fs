@@ -3,20 +3,29 @@
 open TaskListFSharp.RealConsole
 
 module TaskList =
-    [<EntryPoint>]
-    let main =
-        let quit = "quit"
+    let quit = "quit"
+    let help = "help"
 
-        let mutable continueLooping = true
+    let showHelp =
+        let console = RealConsole()
+        console.WriteLine "Commands: "
+        console.WriteLine "\t show"
+        console.WriteLine "\t add project <project name>"
+        console.WriteLine "\t add task <project name> <task description>"
+        console.WriteLine "\t check <task ID>"
+        console.WriteLine "\t uncheck <task ID>"
 
-        let write =
-            while continueLooping do
-                let console = RealConsole()
-                console.Write " >"
-                let command = console.ReadLine()
+    let execute command = if command = help then showHelp
 
-                if command = quit then
-                    continueLooping <- false
+    let mutable continueLooping = true
 
-        write
-        0
+    let write =
+        while continueLooping do
+            let console = RealConsole()
+            console.Write " >"
+            let command = console.ReadLine()
+
+            if command = quit then
+                continueLooping <- false
+            else
+                execute (command)
