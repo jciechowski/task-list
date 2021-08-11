@@ -5,5 +5,5 @@ open TaskListFSharp
 module TaskList =
     [<EntryPoint>]
     let main args =
-        TaskList.write
+        TaskList.write()
         0
