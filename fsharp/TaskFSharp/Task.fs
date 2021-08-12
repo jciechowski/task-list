@@ -1,7 +1,7 @@
 ﻿namespace TaskListFSharp
 
 type Task = {
-    Id: uint64
+    Id: int
     Description: string
     Done: bool
 }
