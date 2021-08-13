@@ -1,10 +1,11 @@
 ﻿namespace TaskListFSharp
 
+open System
 open System.Collections.Generic
 open TaskListFSharp.RealConsole
 
 module TaskList =
-    let tasks = Dictionary<string, List<Task>>()
+    let tasks = Dictionary<string, ResizeArray<Task>>()
     let mutable lastId = 0
     let console = RealConsole()
 
@@ -24,7 +25,7 @@ module TaskList =
                 let taskDone = if task.Done then "x" else " "
                 console.WriteLine $"[{taskDone}] {task.Id}:{task.Description}"
 
-    let addProject projectName = tasks.Add(projectName, List<Task>())
+    let addProject projectName = tasks.Add(projectName, ResizeArray<Task>())
 
     let addTask projectName taskDescription =
         let result, projectTasks = tasks.TryGetValue(projectName)
@@ -40,16 +41,22 @@ module TaskList =
               Done = false }
         )
 
+
+    let updateTask id state tasks =
+         tasks |> List.map (fun (x:Task) ->
+             if x.Id = id then {x with Done = state} else x) |> ResizeArray
     let check taskId =
-        let matchingTask =
-            for project in tasks do
-                for task in project.Value do
-                    if task.Id = taskId then task
-                    else console.WriteLine "missing value"
-        console.WriteLine $"Task with id {taskId.ToString()} done!"
+        let taskIdInt = Int32.Parse taskId
+        let projects = tasks.Keys
+
+        projects |> Seq.iter(fun x -> tasks.[x] <- updateTask taskIdInt true (tasks.[x] |> Seq.toList))
 
     let uncheck taskId =
-        console.WriteLine $"Task with id {taskId.ToString()} unchecked!"
+        let taskIdInt = Int32.Parse taskId
+        let projects = tasks.Keys
+
+        projects |> Seq.iter(fun x -> tasks.[x] <- updateTask taskIdInt false (tasks.[x] |> Seq.toList))
+
 
     let error command =
         console.WriteLine $"I don't know what the command {command} is."
@@ -75,9 +82,9 @@ module TaskList =
         else if command = "add" then
             add commandRest.[1]
         else if command = "check" then
-            check commandRest
+            check commandRest.[1]
         else if command = "uncheck" then
-            uncheck commandRest
+            uncheck commandRest.[1]
         else if command = "show" then
             show ()
         else
@@ -99,4 +106,5 @@ module TaskList =
 thoughts:
     1. block comments in F# use (* and *) instead of /* */
     2. trying to rewrite mutable code to F# isn't easy but that's great! It forces you to try better
+    3. C# List is not the same as F# list, it's ResizeArray!
 *)
